@@ -11,7 +11,7 @@ class HTMLNode():
     def props_to_html(self):
         if not self.props:
             return ""
-        return " ".join(map(lambda x: f'{x[0]}="{x[1]}"', self.props.items()))
+        return " " + " ".join(map(lambda x: f'{x[0]}="{x[1]}"', self.props.items()))
 
     def __repr__(self):
         return f"HTMLNode({self.tag}, {self.value}, {self.children}, {self.props})"
@@ -25,6 +25,24 @@ class LeafNode(HTMLNode):
             raise ValueError("Leaf Node does not have value")
         if not self.tag:
             return self.value
-        space = " " if self.props else ""
-        return f"<{self.tag}{space}{self.props_to_html()}>{self.value}</{self.tag}>"
+        return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
+    
+    def __repr__(self):
+        return f"LeafNode({self.tag}, {self.value}, {self.props})"
+
+class ParentNode(HTMLNode):
+    def __init__(self, tag, children, props=None):
+        super().__init__(tag, None, children, props)
+
+    def to_html(self):
+        if not self.tag:
+            raise ValueError("ParentNode does not have tag")
+        if not self.children:
+            raise ValueError("ParentNode does not have children")
+        children = "".join(i.to_html() for i in self.children)
+        return f"<{self.tag}>{children}</{self.tag}>"
+    
+    def __repr__(self):
+        return f"ParentNode({self.tag}, {self.children}, {self.props})"
+        
         
