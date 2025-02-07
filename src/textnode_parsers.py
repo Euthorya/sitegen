@@ -33,6 +33,49 @@ def extract_markdown_links(text:str):
     
     return [(x, y) for x, y in zip(square, angular)]
 
+def split_nodes_image(old_nodes):
+    new_nodes = []
+    for node in old_nodes:
+        if node.text_type != TextType.TEXT:
+            new_nodes.append(node)
+            continue
+        images = extract_markdown_images(node.text)
+        if not images:
+            new_nodes.append(node)
+
+        line = node.text
+        for i in images:
+            text, rest = line.split(f"![{i[0]}]({i[1]})", 1)
+            if text:
+                new_nodes.append(TextNode(text, TextType.TEXT))
+            new_nodes.append(TextNode(i[0], TextType.IMAGE, i[1]))
+            line = rest
+        if line:
+            new_nodes.append(TextNode(text, TextType.TEXT))
+
+    return new_nodes
+
+def split_nodes_link(old_nodes):
+    new_nodes = []
+    for node in old_nodes:
+        if node.text_type != TextType.TEXT:
+            new_nodes.append(node)
+            continue
+        images = extract_markdown_images(node.text)
+        if not images:
+            new_nodes.append(node)
+
+        line = node.text
+        for i in images:
+            text, rest = line.split(f"[{i[0]}]({i[1]})", 1)
+            if text:
+                new_nodes.append(TextNode(text, TextType.TEXT))
+            new_nodes.append(TextNode(i[0], TextType.LINK, i[1]))
+            line = rest
+        if line:
+            new_nodes.append(TextNode(text, TextType.TEXT))
+
+    return new_nodes
 
 def get_type(delimiter:str):
     match delimiter:
