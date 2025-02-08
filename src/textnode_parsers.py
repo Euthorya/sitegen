@@ -86,6 +86,23 @@ def text_to_textnodes(text):
     nodes = split_nodes_link(nodes)
     return nodes
 
+def markdown_to_blocks(markdown):
+    lines = markdown.split("\n")
+    block = []
+    result = []
+    for line in lines:
+        line = line.strip()
+        if line and line != "\n":
+            block.append(line.strip())
+        else:
+            if block:
+                result.append("\n".join(i for i in block))
+                block = []
+    if block:
+        result.append("\n".join(i for i in block))
+
+    return result
+
 
 def get_type(delimiter:str):
     match delimiter:

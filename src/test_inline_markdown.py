@@ -1,7 +1,7 @@
 import unittest
 
 from textnode import TextNode, TextType
-from textnode_parsers import extract_markdown_images, extract_markdown_links, split_nodes_delimiter, split_nodes_image, split_nodes_link, text_to_textnodes
+from textnode_parsers import extract_markdown_images, extract_markdown_links, markdown_to_blocks, split_nodes_delimiter, split_nodes_image, split_nodes_link, text_to_textnodes
 
 
 class TestTextNode(unittest.TestCase):
@@ -109,6 +109,34 @@ class TestTextNode(unittest.TestCase):
         ]
         new_nodes = text_to_textnodes(text)
         self.assertEqual(new_nodes, nodes)
+
+    def test_markdown_to_blocks(self):
+        lines = markdown_to_blocks("""# This is a heading
+
+This is a paragraph of text. It has some **bold** and *italic* words inside of it.
+
+* This is the first list item in a list block
+* This is a list item
+* This is another list item""")
+        self.assertEqual(lines, ["# This is a heading", "This is a paragraph of text. It has some **bold** and *italic* words inside of it.",
+"""* This is the first list item in a list block
+* This is a list item
+* This is another list item"""])
+        
+    def test_markdown_to_blocks_newlines(self):
+        lines = markdown_to_blocks("""# This is a heading
+
+This is a paragraph of text. It has some **bold** and *italic* words inside of it.
+
+
+    
+* This is the first list item in a list block
+* This is a list item
+* This is another list item""")
+        self.assertEqual(lines, ["# This is a heading", "This is a paragraph of text. It has some **bold** and *italic* words inside of it.",
+"""* This is the first list item in a list block
+* This is a list item
+* This is another list item"""])
 
 
 if __name__ == "__main__":
