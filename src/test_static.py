@@ -1,12 +1,14 @@
-import unittest
+import unittest, os
 
-from static import copy_static
+from static import copy_static, PUBLIC_PATH, STATIC_PATH
 
 
 class TestStatic(unittest.TestCase):
     def test_copy_static(self):
-        x = copy_static()
-        self.assertEqual(x, True)
+        copy_static()
+        public_contents = os.listdir(PUBLIC_PATH)
+        static_contents = os.listdir(STATIC_PATH)
+        self.assertEqual(len(public_contents), len(static_contents))
 
 if __name__ == "__main__":
     unittest.main()

@@ -2,26 +2,31 @@ import os, shutil
 import logging
 logger = logging.getLogger(__name__)
 
+PUBLIC_PATH = "./public/"
+STATIC_PATH = "./static/"
+
 
 def copy_static():
-    if not os.path.exists("./public"):
-        logger.warning("Directory does not exists, creating")
-        os.mkdir("./public", "./static")
-    else:
-        pass
-        
-    copy_dir("./public")
+    if os.path.exists(PUBLIC_PATH):
+        shutil.rmtree(PUBLIC_PATH)
+    os.mkdir(PUBLIC_PATH)
+    #breakpoint()
+    copy_dir(STATIC_PATH, PUBLIC_PATH)
     return True
 
 def copy_dir(directory:str, destination:str):
     contents = os.listdir(directory)
     for content in contents:
-        content = directory + content
-        destination = destination + content
-        if not os.path.isfile(content):
-            os.mkdir(destination)
-            copy_dir(content, destination)
+        path = directory + content
+       # breakpoint()
+        if not os.path.isfile(path):
+            path += "/"
+            folder = destination + content + "/"
+           # breakpoint()
+            os.mkdir(folder)
+            copy_dir(path, folder)
         else:
-            shutil.copy(content, destination)
+           # breakpoint()
+            shutil.copy(path, destination)
 
 
