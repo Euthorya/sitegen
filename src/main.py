@@ -1,9 +1,9 @@
 from htmlnode import LeafNode
 from textnode import TextNode, TextType
+from static import copy_static
 
 
 def main():
-    node = TextNode("text", TextType.BOLD, "url")
-    print(node)
+    copy_static()
 
 main()
