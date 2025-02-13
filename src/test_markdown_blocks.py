@@ -3,7 +3,7 @@ import unittest
 from markdown import markdown_to_html_node
 from textnode import TextNode, TextType
 from textnode_parsers import  text_to_textnodes
-from markdown_blocks import BlockType, block_to_block_type, markdown_to_blocks
+from markdown_blocks import BlockType, block_to_block_type, extract_header, markdown_to_blocks
 
 class TestMarkdownBlocks(unittest.TestCase):
     def test_markdown_to_blocks(self):
@@ -18,6 +18,23 @@ This is a paragraph of text. It has some **bold** and *italic* words inside of i
 """* This is the first list item in a list block
 * This is a list item
 * This is another list item"""])
+        
+
+    def test_extract_header(self):
+        header = extract_header("""# This is a heading
+
+This is a paragraph of text. It has some **bold** and *italic* words inside of it.
+
+* This is the first list item in a list block
+* This is a list item
+* This is another list item""")
+        self.assertEqual(header, "This is a heading")
+    
+    def test_extract_header_no_header_exception(self):
+        with self.assertRaises(ValueError):
+            header = extract_header("""This is a paragraph""")
+
+
         
     def test_markdown_to_blocks_newlines(self):
         lines = markdown_to_blocks("""# This is a heading

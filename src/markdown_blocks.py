@@ -29,6 +29,18 @@ def markdown_to_blocks(markdown):
 
     return result
 
+def extract_header(markdown):
+    header = None
+    blocks = markdown_to_blocks(markdown)
+    for block in blocks:
+        if block_to_block_type(block) == BlockType.HEADING:
+            header = block
+            break
+    if not header:
+        raise ValueError("No header was found")
+    return header.lstrip("#").strip()
+
+
 def block_to_block_type(block):
     lines = block.split("\n")
     if block.startswith(("# ", "## ", "### ", "#### ", "##### ", "###### ")):
